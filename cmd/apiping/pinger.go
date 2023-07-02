@@ -73,7 +73,7 @@ func pingTarget(target string, tracer trace.Tracer, met *metrics) {
 
 	body, errBody := io.ReadAll(resp.Body)
 	if errBody != nil {
-		log.Printf("%s: URL=%s traceID=%s body error: %v", me, target, traceID, errGet)
+		log.Printf("%s: URL=%s traceID=%s body error: %v", me, target, traceID, errBody)
 		span.SetStatus(codes.Error, errBody.Error())
 		return
 	}
@@ -81,10 +81,10 @@ func pingTarget(target string, tracer trace.Tracer, met *metrics) {
 	str := string(body)
 
 	if resp.StatusCode != 200 {
-		log.Printf("%s: URL=%s traceID=%s bad response status: status=%d %v", me, target, traceID, resp.StatusCode, str)
-		span.SetStatus(codes.Error, fmt.Sprintf("bad response status: %d", resp.StatusCode))
+		log.Printf("%s: URL=%s traceID=%s bad response status: status=%d %v", me, target, traceID, status, str)
+		span.SetStatus(codes.Error, fmt.Sprintf("bad response status: %d", status))
 		return
 	}
 
-	log.Printf("%s: URL=%s traceID=%s response: status=%d %v", me, target, traceID, resp.StatusCode, str)
+	log.Printf("%s: URL=%s traceID=%s response: status=%d %v", me, target, traceID, status, str)
 }
