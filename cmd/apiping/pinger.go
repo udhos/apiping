@@ -18,8 +18,8 @@ func pinger(app *application) {
 	for {
 		for _, target := range app.targets {
 			go pingTarget(target, app.tracer, app.met)
-			log.Printf("%s: sleeping for %v", me, app.conf.interval)
 		}
+		log.Printf("%s: sleeping for %v", me, app.conf.interval)
 		time.Sleep(app.conf.interval)
 	}
 }
