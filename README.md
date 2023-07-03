@@ -1,3 +1,9 @@
+[![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/udhos/apiping/blob/main/LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/udhos/apiping)](https://goreportcard.com/report/github.com/udhos/apiping)
+[![Go Reference](https://pkg.go.dev/badge/github.com/udhos/apiping.svg)](https://pkg.go.dev/github.com/udhos/apiping)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/apiping)](https://artifacthub.io/packages/search?repo=apiping)
+[![Docker Pulls apiping](https://img.shields.io/docker/pulls/udhos/apiping)](https://hub.docker.com/r/udhos/apiping)
+
 # apiping
 
 apiping
@@ -57,3 +63,27 @@ Build recipe:
 
 docker push udhos/apiping:0.0.0
 ```
+
+# Helm chart
+
+You can use the provided helm charts to install apiping in your Kubernetes cluster.
+
+See: https://udhos.github.io/apiping/
+
+## Lint
+
+    helm lint ./charts/apiping --values charts/apiping/values.yaml
+
+## Debug
+
+    helm template ./charts/apiping --values charts/apiping/values.yaml --debug
+
+## Render at server
+
+    helm install my-apiping ./charts/apiping --values charts/apiping/values.yaml --dry-run
+
+## Install
+
+    helm install my-apiping ./charts/apiping --values charts/apiping/values.yaml
+
+    helm list -A

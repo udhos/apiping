@@ -1,0 +1,126 @@
+# Default values for apiping.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: udhos/apiping
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# redeploy:
+#
+# 'always': adds a random annotation to Deployment in
+#           order to redeploy the pods whenever the chart is reapplied.
+#
+# 'reconfig': adds annotations with checksums of configurations in
+#             order to redeploy the pods whenever configuration is changed.
+#
+# https://v3.helm.sh/docs/howto/charts_tips_and_tricks/#automatically-roll-deployments
+#
+redeploy: always
+
+podAnnotations:
+  "sidecar.istio.io/inject": "true"
+  "prometheus.io/scrape": "true"
+  "prometheus.io/path": /metrics
+  "prometheus.io/port": "3000"
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# add custom labels to deployment pods
+customLabels:
+  app: apiping
+
+resources:
+  requests:
+    cpu: 300m
+    memory: 100Mi
+    ephemeral-storage: 100Mi
+  limits:
+    cpu: 2000m
+    memory: 300Mi
+    ephemeral-storage: 200Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  apiVersion: autoscaling/v2
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+podHealthCheck:
+  port: 8888
+  path: /health
+
+#
+# See: https://stackoverflow.com/questions/72816925/helm-templating-in-configmap-for-values-yaml
+#
+configMapProperties:
+  ADDR: :8080
+  ROUTE: /ping
+  TARGETS: "[\"http://localhost:8080/ping\"]"
+  JAEGER_URL: http://jaeger-collector:14268/api/traces
+  INTERVAL: 10s
+  METRICS_ADDR: :3000
+  METRICS_PATH: /metrics
+  METRICS_NAMESPACE: ""
+  METRICS_BUCKETS_LATENCY: "0.000005, 0.00001, 0.000025, 0.00005, 0.0001, 0.00025, 0.0005, 0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1"
+  METRICS_BUCKETS_LATENCY: "0.0001, 0.00025, 0.0005, 0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, .5, 1"
+  HEALTH_ADDR: :8888
+  HEALTH_PATH: /health
+  OTEL_TRACES_SAMPLER: parentbased_traceidratio
+  OTEL_TRACES_SAMPLER_ARG: "0.01"
+  # pick one of OTEL_SERVICE_NAME or OTEL_RESOURCE_ATTRIBUTES
+  #OTEL_SERVICE_NAME: mynamespace.apiping
+  #OTEL_RESOURCE_ATTRIBUTES: 'service.name=mynamespace.apiping,key2=value2'
