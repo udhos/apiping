@@ -42,11 +42,11 @@ export METRICS_BUCKETS_LATENCY="0.000005, 0.00001, 0.000025, 0.00005, 0.0001, 0.
 export METRICS_BUCKETS_LATENCY="0.0001, 0.00025, 0.0005, 0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, .5, 1"
 export HEALTH_ADDR=:8888
 export HEALTH_PATH=/health
-export OTEL_TRACES_SAMPLER: parentbased_traceidratio
-export OTEL_TRACES_SAMPLER_ARG: "0.01"
+export OTEL_TRACES_SAMPLER=parentbased_traceidratio
+export OTEL_TRACES_SAMPLER_ARG="0.01"
 # pick one of OTEL_SERVICE_NAME or OTEL_RESOURCE_ATTRIBUTES
-#export OTEL_SERVICE_NAME: mynamespace.apiping
-#export OTEL_RESOURCE_ATTRIBUTES: 'service.name=mynamespace.apiping,key2=value2'
+#export OTEL_SERVICE_NAME=mynamespace.apiping
+#export OTEL_RESOURCE_ATTRIBUTES='service.name=mynamespace.apiping,key2=value2'
 ```
 
 # Docker
