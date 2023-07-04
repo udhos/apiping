@@ -39,12 +39,14 @@ func pingTarget(target string, tracer trace.Tracer, met *metrics) {
 	log.Printf("%s: URL=%s traceID=%s timeout=%v", me, target, traceID, timeout)
 
 	var status int
+	var responseBody string
 
 	begin := time.Now()
 
 	defer func() {
 		elap := time.Since(begin)
-		log.Printf("%s: URL=%s traceID=%s elapsed=%v", me, target, traceID, elap)
+		log.Printf("%s: URL=%s traceID=%s elapsed=%v status=%d response:%v",
+			me, target, traceID, elap, status, responseBody)
 		met.recordLatencyClient(method, fmt.Sprint(status), target, elap)
 	}()
 
@@ -78,13 +80,14 @@ func pingTarget(target string, tracer trace.Tracer, met *metrics) {
 		return
 	}
 
-	str := string(body)
+	responseBody = string(body)
 
 	if resp.StatusCode != 200 {
-		log.Printf("%s: URL=%s traceID=%s bad response status: status=%d %v", me, target, traceID, status, str)
+		log.Printf("%s: URL=%s traceID=%s bad response status: status=%d %v", me, target, traceID, status, responseBody)
 		span.SetStatus(codes.Error, fmt.Sprintf("bad response status: %d", status))
 		return
 	}
 
-	log.Printf("%s: URL=%s traceID=%s response: status=%d %v", me, target, traceID, status, str)
+	// defer provides a better result
+	//log.Printf("%s: URL=%s traceID=%s status=%d response:%v", me, target, traceID, status, responseBody)
 }
