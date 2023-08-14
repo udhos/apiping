@@ -17,26 +17,21 @@ func pinger(app *application) {
 	const me = "pinger"
 	for {
 		for _, target := range app.targets {
-			go pingTarget(target, app.tracer, app.met)
+			go pingTarget("GET", target, app.tracer, app.met, app.conf.timeout)
 		}
 		log.Printf("%s: sleeping for %v", me, app.conf.interval)
 		time.Sleep(app.conf.interval)
 	}
 }
 
-func pingTarget(target string, tracer trace.Tracer, met *metrics) {
+func pingTarget(method, target string, tracer trace.Tracer, met *metrics, timeout time.Duration) {
 	const me = "pingTarget"
 	ctx, span := tracer.Start(context.Background(), me)
 	defer span.End()
 
 	traceID := span.SpanContext().TraceID()
 
-	const (
-		timeout = 5 * time.Second
-		method  = "GET"
-	)
-
-	log.Printf("%s: URL=%s traceID=%s timeout=%v", me, target, traceID, timeout)
+	log.Printf("%s: %s:%s traceID=%s timeout=%v", me, method, target, traceID, timeout)
 
 	var status int
 	var responseBody string

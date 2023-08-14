@@ -111,7 +111,8 @@ configMapProperties:
   ROUTE: /ping
   TARGETS: "[\"http://localhost:8080/ping\"]"
   JAEGER_URL: http://jaeger-collector:14268/api/traces
-  INTERVAL: 10s
+  INTERVAL: 20s
+  TIMEOUT: 15s
   METRICS_ADDR: :3000
   METRICS_PATH: /metrics
   METRICS_NAMESPACE: ""

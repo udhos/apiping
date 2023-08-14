@@ -8,6 +8,7 @@ type config struct {
 	targets                     string
 	jaegerURL                   string
 	interval                    time.Duration
+	timeout                     time.Duration
 	metricsAddr                 string
 	metricsPath                 string
 	metricsNamespace            string
@@ -23,7 +24,8 @@ func getConfig() config {
 		route:                       envString("ROUTE", "/ping"),
 		targets:                     envString("TARGETS", `["http://localhost:8080/ping"]`),
 		jaegerURL:                   envString("JAEGER_URL", "http://jaeger-collector:14268/api/traces"),
-		interval:                    envDuration("INTERVAL", 10*time.Second),
+		interval:                    envDuration("INTERVAL", 20*time.Second),
+		timeout:                     envDuration("TIMEOUT", 15*time.Second),
 		metricsAddr:                 envString("METRICS_ADDR", ":3000"),
 		metricsPath:                 envString("METRICS_PATH", "/metrics"),
 		metricsNamespace:            envString("METRICS_NAMESPACE", ""),
