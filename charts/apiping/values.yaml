@@ -128,12 +128,12 @@ configMapProperties:
   # Exporter configuration: https://opentelemetry.io/docs/concepts/sdk-configuration/otlp-exporter-configuration/
   #
   # Jaeger:
-  #EXPORTER=jaeger
+  #EXPORTER: jaeger
   #OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger-collector:14268
   #
   # OTLP gRPC:
-  #EXPORTER=otlp-grpc
-  #OTEL_EXPORTER_OTLP_ENDPOINT http://jaeger-collector:4317
+  #EXPORTER: otlp-grpc
+  #OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger-collector:4317
   #
   # OTLP HTTP:
   #EXPORTER: otlp-http
