@@ -18,7 +18,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const version = "1.1.5"
+const version = "1.2.0"
 
 type application struct {
 	me            string
@@ -76,7 +76,7 @@ func main() {
 	//
 
 	{
-		tp, errTracer := tracerProvider(app.me, app.conf.jaegerURL)
+		tp, errTracer := tracerProvider(app.me, app.conf.exporter)
 		if errTracer != nil {
 			log.Fatalf("tracer provider: %v", errTracer)
 		}

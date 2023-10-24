@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -8,6 +10,10 @@ import (
 	"go.opentelemetry.io/contrib/propagators/b3"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/jaeger"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
+	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
@@ -34,11 +40,11 @@ Open Telemetry tracing with Gin:
 // 1. OTEL_SERVICE_NAME=mysrv
 // 2. OTEL_RESOURCE_ATTRIBUTES=service.name=mysrv
 // 3. defaultService="mysrv"
-func tracerProvider(defaultService, url string) (*tracesdk.TracerProvider, error) {
-	log.Printf("tracerProvider: service=%s collector=%s", defaultService, url)
+func tracerProvider(defaultService, exporter string) (*tracesdk.TracerProvider, error) {
+	log.Printf("tracerProvider: service=%s exporter=%s", defaultService, exporter)
 
 	// Create the Jaeger exporter
-	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
+	exp, err := createExporter(exporter)
 	if err != nil {
 		return nil, err
 	}
@@ -67,6 +73,29 @@ func tracerProvider(defaultService, url string) (*tracesdk.TracerProvider, error
 		tracesdk.WithResource(rsrc),
 	)
 	return tp, nil
+}
+
+func createExporter(exporter string) (tracesdk.SpanExporter, error) {
+	const me = "createExporter"
+	switch exporter {
+	case "jaeger":
+		return jaeger.New(jaeger.WithCollectorEndpoint())
+	case "otlp-grpc":
+		client := otlptracegrpc.NewClient(
+			otlptracegrpc.WithInsecure(),
+		)
+		return otlptrace.New(context.Background(), client)
+	case "otlp-http":
+		client := otlptracehttp.NewClient(
+			otlptracehttp.WithInsecure(),
+		)
+		return otlptrace.New(context.Background(), client)
+	case "stdout":
+		return stdouttrace.New()
+	}
+	return nil, fmt.Errorf("%s: unrecognized exporter type: '%s'",
+		me, exporter)
+
 }
 
 func hasServiceEnvVar() bool {
