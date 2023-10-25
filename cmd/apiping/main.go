@@ -2,7 +2,6 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -10,15 +9,14 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-	"time"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"go.opentelemetry.io/otel"
+	"github.com/udhos/otelconfig/oteltrace"
 	"go.opentelemetry.io/otel/trace"
 	"gopkg.in/yaml.v3"
 )
 
-const version = "1.2.0"
+const version = "1.3.0"
 
 type application struct {
 	me            string
@@ -76,32 +74,48 @@ func main() {
 	//
 
 	{
-		tp, errTracer := tracerProvider(app.me, app.conf.exporter)
+		const debug = true
+
+		tracer, cancel, errTracer := oteltrace.TraceStart(me, debug)
+
 		if errTracer != nil {
-			log.Fatalf("tracer provider: %v", errTracer)
+			log.Fatalf("tracer: %v", errTracer)
 		}
 
-		// Register our TracerProvider as the global so any imported
-		// instrumentation in the future will default to using it.
-		otel.SetTracerProvider(tp)
-
-		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
-		// Cleanly shutdown and flush telemetry when the application exits.
-		defer func(ctx context.Context) {
-			// Do not make the application hang when it is shutdown.
-			ctx, cancel = context.WithTimeout(ctx, time.Second*5)
-			defer cancel()
-			if err := tp.Shutdown(ctx); err != nil {
-				log.Fatalf("trace shutdown: %v", err)
-			}
-		}(ctx)
-
-		tracePropagation()
-
-		app.tracer = tp.Tracer(fmt.Sprintf("%s-main", app.me))
+		app.tracer = tracer
 	}
+
+	/*
+		{
+			tp, errTracer := tracerProvider(app.me, app.conf.exporter)
+			if errTracer != nil {
+				log.Fatalf("tracer provider: %v", errTracer)
+			}
+
+			// Register our TracerProvider as the global so any imported
+			// instrumentation in the future will default to using it.
+			otel.SetTracerProvider(tp)
+
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			// Cleanly shutdown and flush telemetry when the application exits.
+			defer func(ctx context.Context) {
+				// Do not make the application hang when it is shutdown.
+				ctx, cancel = context.WithTimeout(ctx, time.Second*5)
+				defer cancel()
+				if err := tp.Shutdown(ctx); err != nil {
+					log.Fatalf("trace shutdown: %v", err)
+				}
+			}(ctx)
+
+			tracePropagation()
+
+			app.tracer = tp.Tracer(fmt.Sprintf("%s-main", app.me))
+		}
+	*/
 
 	//
 	// initialize http

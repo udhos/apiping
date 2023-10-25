@@ -48,13 +48,19 @@ export OTEL_TRACES_SAMPLER_ARG="0.01"
 #export OTEL_SERVICE_NAME=mynamespace.apiping
 #export OTEL_RESOURCE_ATTRIBUTES='service.name=mynamespace.apiping,key2=value2'
 
-export EXPORTER=jaeger
+export OTELCONFIG_EXPORTER=jaeger
+export OTEL_TRACES_EXPORTER=jaeger
+export OTEL_PROPAGATORS=b3multi
 export OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger-collector:14268
 
-export EXPORTER=otlp-grpc
+export OTELCONFIG_EXPORTER=grpc
+export OTEL_TRACES_EXPORTER=otlp
+export OTEL_PROPAGATORS=b3multi
 export OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger-collector:4317
 
-export EXPORTER=otlp-http
+export OTELCONFIG_EXPORTER=http
+export OTEL_TRACES_EXPORTER=otlp
+export OTEL_PROPAGATORS=b3multi
 export OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger-collector:4318
 ```
 
