@@ -16,7 +16,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const version = "1.3.0"
+const version = "1.3.1"
 
 type application struct {
 	me            string
@@ -74,9 +74,13 @@ func main() {
 	//
 
 	{
-		const debug = true
+		options := oteltrace.TraceOptions{
+			DefaultService:     me,
+			NoopTracerProvider: false,
+			Debug:              true,
+		}
 
-		tracer, cancel, errTracer := oteltrace.TraceStart(me, debug)
+		tracer, cancel, errTracer := oteltrace.TraceStart(options)
 
 		if errTracer != nil {
 			log.Fatalf("tracer: %v", errTracer)

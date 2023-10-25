@@ -4,7 +4,7 @@ go 1.21.3
 
 require (
 	github.com/prometheus/client_golang v1.16.0
-	github.com/udhos/otelconfig v0.0.2
+	github.com/udhos/otelconfig v0.1.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.45.0
 	go.opentelemetry.io/otel/trace v1.19.0
 	gopkg.in/yaml.v3 v3.0.1
