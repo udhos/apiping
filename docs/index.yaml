@@ -2,6 +2,18 @@ apiVersion: v1
 entries:
   apiping:
   - apiVersion: v2
+    appVersion: 1.3.2
+    created: "2023-10-25T14:39:22.050398456-03:00"
+    description: Install apiping helm chart into kubernetes.
+    digest: fd822a960c297d7d71628772c1c1e862247b96c0da3614622c3371cea4f57676
+    name: apiping
+    sources:
+    - https://github.com/udhos/apiping
+    type: application
+    urls:
+    - https://udhos.github.io/apiping/apiping-1.3.2.tgz
+    version: 1.3.2
+  - apiVersion: v2
     appVersion: 1.3.1
     created: "2023-10-24T23:49:26.779806516-03:00"
     description: Install apiping helm chart into kubernetes.
@@ -157,4 +169,4 @@ entries:
     urls:
     - https://udhos.github.io/apiping/apiping-0.1.0.tgz
     version: 0.1.0
-generated: "2023-10-24T23:49:26.773436769-03:00"
+generated: "2023-10-25T14:39:22.043441455-03:00"
