@@ -7,6 +7,7 @@ require (
 	github.com/udhos/otelconfig v0.1.6
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.47.0
 	go.opentelemetry.io/otel/trace v1.22.0
+	go.uber.org/automaxprocs v1.5.3
 	gopkg.in/yaml.v3 v3.0.1
 )
 

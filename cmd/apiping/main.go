@@ -13,10 +13,11 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/udhos/otelconfig/oteltrace"
 	"go.opentelemetry.io/otel/trace"
+	_ "go.uber.org/automaxprocs"
 	"gopkg.in/yaml.v3"
 )
 
-const version = "1.3.3"
+const version = "1.3.5"
 
 type application struct {
 	me            string
