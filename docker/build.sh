@@ -1,12 +1,18 @@
 #!/bin/bash
 
-version=$(go run ./cmd/apiping -version | awk '{ print $2 }' | awk -F= '{ print $2 }')
+app=apiping
+
+version=$(go run ./cmd/$app -version | awk '{ print $2 }' | awk -F= '{ print $2 }')
 
 echo version=$version
 
 docker build --no-cache \
-    -t udhos/apiping:latest \
-    -t udhos/apiping:$version \
+    -t udhos/$app:latest \
+    -t udhos/$app:$version \
     -f docker/Dockerfile .
 
-echo "push: docker push udhos/apiping:$version; docker push udhos/apiping:latest"
+echo push:
+echo "docker push udhos/$app:$version; docker push udhos/$app:latest" > docker-push.sh
+chmod a+rx docker-push.sh
+echo docker-push.sh:
+cat docker-push.sh
