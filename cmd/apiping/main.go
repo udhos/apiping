@@ -17,7 +17,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const version = "1.3.9"
+const version = "1.4.0"
 
 type application struct {
 	me            string
@@ -74,7 +74,7 @@ func main() {
 	// initialize tracing
 	//
 
-	{
+	if app.conf.otelTraceEnable {
 		options := oteltrace.TraceOptions{
 			DefaultService:     me,
 			NoopTracerProvider: false,
@@ -90,37 +90,9 @@ func main() {
 		defer cancel()
 
 		app.tracer = tracer
+	} else {
+		app.tracer = oteltrace.NewNoopTracer()
 	}
-
-	/*
-		{
-			tp, errTracer := tracerProvider(app.me, app.conf.exporter)
-			if errTracer != nil {
-				log.Fatalf("tracer provider: %v", errTracer)
-			}
-
-			// Register our TracerProvider as the global so any imported
-			// instrumentation in the future will default to using it.
-			otel.SetTracerProvider(tp)
-
-			ctx, cancel := context.WithCancel(context.Background())
-			defer cancel()
-
-			// Cleanly shutdown and flush telemetry when the application exits.
-			defer func(ctx context.Context) {
-				// Do not make the application hang when it is shutdown.
-				ctx, cancel = context.WithTimeout(ctx, time.Second*5)
-				defer cancel()
-				if err := tp.Shutdown(ctx); err != nil {
-					log.Fatalf("trace shutdown: %v", err)
-				}
-			}(ctx)
-
-			tracePropagation()
-
-			app.tracer = tp.Tracer(fmt.Sprintf("%s-main", app.me))
-		}
-	*/
 
 	//
 	// initialize http

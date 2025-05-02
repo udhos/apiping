@@ -42,6 +42,7 @@ export METRICS_BUCKETS_LATENCY_SERVER="0.000005, 0.00001, 0.000025, 0.00005, 0.0
 export METRICS_BUCKETS_LATENCY_CLIENT="0.0001, 0.00025, 0.0005, 0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, .5, 1"
 export HEALTH_ADDR=:8888
 export HEALTH_PATH=/health
+export OTEL_TRACE_ENABLE=true
 export OTEL_TRACES_SAMPLER=parentbased_traceidratio
 export OTEL_TRACES_SAMPLER_ARG="0.01"
 # pick one of OTEL_SERVICE_NAME or OTEL_RESOURCE_ATTRIBUTES
@@ -111,3 +112,15 @@ See: https://udhos.github.io/apiping/
     helm install my-apiping ./charts/apiping --values charts/apiping/values.yaml
 
     helm list -A
+
+# Datadog
+
+Image tags suffixed with `-datadog` are instrumented with Datadog [Orchestrion](https://github.com/DataDog/orchestrion).
+
+See https://hub.docker.com/r/udhos/apiping/tags
+
+## Example
+
+Install latest image instrumented with support for Datadog:
+
+    helm upgrade --install apiping-dd ./charts/apiping --set image.tag=latest-datadog

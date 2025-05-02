@@ -16,6 +16,7 @@ type config struct {
 	metricsLatencyBucketsClient []float64
 	healthAddr                  string
 	healthPath                  string
+	otelTraceEnable             bool
 }
 
 func getConfig() config {
@@ -33,5 +34,6 @@ func getConfig() config {
 		metricsLatencyBucketsClient: envFloat64Slice("METRICS_BUCKETS_LATENCY_CLIENT", []float64{0.0001, 0.00025, 0.0005, 0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, .5, 1}),
 		healthAddr:                  envString("HEALTH_ADDR", ":8888"),
 		healthPath:                  envString("HEALTH_PATH", "/health"),
+		otelTraceEnable:             envBool("OTEL_TRACE_ENABLE", true),
 	}
 }
