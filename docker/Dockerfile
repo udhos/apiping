@@ -14,6 +14,8 @@ WORKDIR /tmp/app
 RUN rm -f ./orchestrion.tool.go
 RUN go mod tidy
 RUN go env -w CGO_ENABLED=0
+ARG GOARCH
+RUN echo "Building for GOARCH=$GOARCH"
 RUN go build -o /tmp/apiping github.com/udhos/apiping/cmd/apiping
 
 #
